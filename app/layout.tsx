@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "RSSI Lab Logger",
-  description: "MIT PE Assignment 3.1 - RSSI Measurement Tool",
+  description: "MIT PE - RSSI Measurement Tool",
 };
 
 export default function RootLayout({

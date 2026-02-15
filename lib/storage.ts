@@ -3,7 +3,7 @@ import { ExperimentData, ExperimentMeta, Reading } from '@/types';
 const STORAGE_KEY = 'rssi-lab-logger-v1';
 
 const DEFAULT_META: ExperimentMeta = {
-    title: "Assignment 3.1 – RSSI Measurement of a Laptop (WiFi)",
+    title: "RSSI Measurement of a Laptop (WiFi)",
     dateISO: new Date().toISOString(),
     band: "Unknown",
     unit: "m",

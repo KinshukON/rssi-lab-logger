@@ -1,5 +1,5 @@
 export type ExperimentMeta = {
-  title: string; // default: "Assignment 3.1 – RSSI Measurement of a Laptop (WiFi)"
+  title: string; // default: "RSSI Measurement of a Laptop (WiFi)"
   name?: string;
   dateISO: string;
   location?: string;

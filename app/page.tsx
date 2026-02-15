@@ -16,7 +16,7 @@ import { Trash2, FileText, Download, RotateCcw } from "lucide-react";
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const [meta, setMeta] = useState<ExperimentMeta>({
-    title: "Assignment 3.1 – RSSI Measurement",
+    title: "RSSI Measurement",
     dateISO: new Date().toISOString(),
     band: "Unknown",
     unit: "m",

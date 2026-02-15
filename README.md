@@ -1,6 +1,6 @@
 # RSSI Lab Logger
 
-A Next.js application designed for "Assignment 3.1" (MIT PE) to record, visualize, and report Wi-Fi RSSI measurements.
+A Next.js application designed for RSSI Lab Logger (MIT PE) to record, visualize, and report Wi-Fi RSSI measurements.
 
 ## Features
 
