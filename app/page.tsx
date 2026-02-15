@@ -94,13 +94,62 @@ export default function Home() {
     }
   }, [meta, readings, loaded]);
 
-  // ... (handlers omitted for brevity) ...
-
-  const handleCsvExport = () => {
-    // ... (export logic) ...
+  const handleAddReading = (reading: Reading) => {
+    setReadings([...readings, reading]);
   };
 
-  // ... (handlers) ...
+  const handleDeleteReading = (id: string) => {
+    setReadings(readings.filter((r) => r.id !== id));
+  };
+
+  const handleReset = () => {
+    if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+      setReadings([]);
+      // keep meta mostly, maybe just reset date
+      setMeta({ ...meta, dateISO: new Date().toISOString() });
+    }
+  };
+
+  const handleCsvExport = () => {
+    const headers = ["ReadingID", "Timestamp", "Distance_Meters", "RSSI_dBm", "Noise_dBm", "TxRate_Mbps", "Note"];
+    const rows = readings.map(r => [
+      r.id,
+      r.createdAtISO,
+      r.distanceM.toString(),
+      r.rssiDbm.toString(),
+      r.noiseDbm || "",
+      r.txRateMbps || "",
+      r.note || ""
+    ].join(","));
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `rssi_data_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleDemoData = () => {
+    if (readings.length > 0 && !confirm("Overwrite current data with demo data?")) return;
+
+    const demoReadings: Reading[] = [
+      { id: "1", createdAtISO: new Date().toISOString(), distanceM: 1, rssiDbm: -35, note: "Baseline" },
+      { id: "2", createdAtISO: new Date().toISOString(), distanceM: 1, rssiDbm: -38 },
+      { id: "3", createdAtISO: new Date().toISOString(), distanceM: 2, rssiDbm: -45 },
+      { id: "4", createdAtISO: new Date().toISOString(), distanceM: 3, rssiDbm: -52 },
+      { id: "5", createdAtISO: new Date().toISOString(), distanceM: 4, rssiDbm: -58 },
+      { id: "6", createdAtISO: new Date().toISOString(), distanceM: 5, rssiDbm: -62, note: "Wall obstruction" },
+      { id: "7", createdAtISO: new Date().toISOString(), distanceM: 6, rssiDbm: -68 },
+      { id: "8", createdAtISO: new Date().toISOString(), distanceM: 8, rssiDbm: -72 },
+      { id: "9", createdAtISO: new Date().toISOString(), distanceM: 10, rssiDbm: -78 },
+      { id: "10", createdAtISO: new Date().toISOString(), distanceM: 12, rssiDbm: -82, note: "Packet loss started" },
+    ];
+    setReadings(demoReadings);
+    setMeta({ ...meta, band: "5GHz", ssid: "MIT-Secure" });
+  };
 
   if (loadError) {
     return (
