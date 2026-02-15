@@ -15,10 +15,10 @@ import { Trash2, FileText, Download, RotateCcw } from "lucide-react";
 
 export default function Home() {
   const [meta, setMeta] = useState<ExperimentMeta>({
-    experimentName: "",
-    location: "",
-    device: "",
-    unit: "meters",
+    title: "RSSI Measurement",
+    dateISO: new Date().toISOString(),
+    band: "Unknown",
+    unit: "m",
   });
   const [readings, setReadings] = useState<Reading[]>([]);
   const [loaded, setLoaded] = useState(false);
