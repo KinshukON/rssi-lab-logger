@@ -22,6 +22,7 @@ export default function Home() {
   });
   const [readings, setReadings] = useState<Reading[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [isElectron, setIsElectron] = useState(false);
 
   const [loadingStatus, setLoadingStatus] = useState<string[]>(["Application mounted."]);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -49,6 +50,12 @@ export default function Home() {
           return;
         }
         addLog("Window object found.");
+
+        // Check for Electron
+        if ((window as any).electronAPI?.isElectron) {
+          addLog("Electron environment detected.");
+          setIsElectron(true);
+        }
 
         addLog("Reading localStorage...");
         let data;
@@ -172,7 +179,7 @@ export default function Home() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-green-400 p-10 font-mono text-sm">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-        <h2 className="text-xl font-bold mb-4">System Initializing... (v1.0.17)</h2>
+        <h2 className="text-xl font-bold mb-4">System Initializing... (v1.0.18)</h2>
         <div className="w-full max-w-2xl bg-black border border-green-9000 rounded p-4 h-96 overflow-y-auto shadow-inner">
           {loadingStatus.map((log, i) => (
             <div key={i} className="border-b border-green-900/30 py-1">{log}</div>
@@ -230,14 +237,16 @@ export default function Home() {
                   <span>View Report</span>
                 </button>
               </Link>
-              <a
-                href="https://github.com/KinshukON/rssi-lab-logger/releases/latest"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden md:inline-flex bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all shadow-sm hover:shadow active:scale-95 ml-2"
-              >
-                <span> Download App</span>
-              </a>
+              {!isElectron && (
+                <a
+                  href="https://github.com/KinshukON/rssi-lab-logger/releases/latest"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden md:inline-flex bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all shadow-sm hover:shadow active:scale-95 ml-2"
+                >
+                  <span> Download App</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

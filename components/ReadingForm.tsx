@@ -23,8 +23,16 @@ export default function ReadingForm({ unit, onAddReading, suggestedDistance }: P
     const [isElectron, setIsElectron] = useState(false);
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && window.electronAPI?.isElectron) {
-            setIsElectron(true);
+        // Debug logging for Electron detection
+        if (typeof window !== 'undefined') {
+            const api = (window as any).electronAPI;
+            console.log("Checking for electronAPI:", api);
+            if (api?.isElectron) {
+                console.log("Electron detected!");
+                setIsElectron(true);
+            } else {
+                console.log("Electron NOT detected.");
+            }
         }
     }, []);
 
