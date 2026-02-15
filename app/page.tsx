@@ -14,29 +14,72 @@ import RssiChart from "@/components/RssiChart";
 import { Trash2, FileText, Download, RotateCcw } from "lucide-react";
 
 export default function Home() {
-  const [loadingStatus, setLoadingStatus] = useState<string>("Initializing...");
+  const [meta, setMeta] = useState<ExperimentMeta>({
+    experimentName: "",
+    location: "",
+    device: "",
+    unit: "meters",
+  });
+  const [readings, setReadings] = useState<Reading[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  const [loadingStatus, setLoadingStatus] = useState<string[]>(["Application mounted."]);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  const addLog = (msg: string) => setLoadingStatus(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
 
   // Load data on mount
   useEffect(() => {
     let mounted = true;
+
+    // Safety timeout
     const timer = setTimeout(() => {
       if (mounted && !loaded) {
-        setLoadError("Loading timed out. LocalStorage might be inaccessible.");
+        setLoadError("Loading timed out (5s). Check logs above.");
       }
     }, 5000);
 
-    try {
-      setLoadingStatus("Reading local storage...");
-      const data = loadExperiment();
-      if (data) {
-        setMeta(data.meta);
-        setReadings(data.readings);
+    const init = async () => {
+      try {
+        await new Promise(r => setTimeout(r, 100)); // Give UI time to paint
+        addLog("Starting initialization hook...");
+
+        if (typeof window === 'undefined') {
+          addLog("Error: window is undefined (SSR?)");
+          return;
+        }
+        addLog("Window object found.");
+
+        addLog("Reading localStorage...");
+        let data;
+        try {
+          data = loadExperiment();
+          addLog(`LocalStorage read complete. Data found: ${!!data}`);
+        } catch (storageErr: any) {
+          addLog(`LocalStorage Error: ${storageErr.message}`);
+          throw storageErr;
+        }
+
+        if (data) {
+          addLog("Parsing metadata...");
+          setMeta(data.meta);
+          addLog("Parsing readings...");
+          setReadings(data.readings);
+        } else {
+          addLog("No existing data found. Using defaults.");
+        }
+
+        addLog("Setting loaded state to true...");
+        setLoaded(true);
+        addLog("Initialization complete.");
+      } catch (e: any) {
+        console.error(e);
+        setLoadError(e.message || "Unknown error during initialization");
+        addLog(`CRITICAL FAILURE: ${e.message}`);
       }
-      setLoaded(true);
-    } catch (e: any) {
-      setLoadError(e.message || "Unknown error during initialization");
-    }
+    };
+
+    init();
 
     return () => {
       mounted = false;
@@ -78,9 +121,20 @@ export default function Home() {
 
   if (!loaded) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <p className="text-slate-500 font-mono text-sm">{loadingStatus}</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-green-400 p-10 font-mono text-sm">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
+        <h2 className="text-xl font-bold mb-4">System Initializing...</h2>
+        <div className="w-full max-w-2xl bg-black border border-green-9000 rounded p-4 h-96 overflow-y-auto shadow-inner">
+          {loadingStatus.map((log, i) => (
+            <div key={i} className="border-b border-green-900/30 py-1">{log}</div>
+          ))}
+          {loadError && (
+            <div className="text-red-500 font-bold mt-2 pt-2 border-t border-red-900">
+              ERROR: {loadError}
+            </div>
+          )}
+        </div>
+        <p className="mt-4 text-slate-500 text-xs">If this screen persists, please screenshot this log.</p>
       </div>
     );
   }
