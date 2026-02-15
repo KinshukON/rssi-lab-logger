@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const { exec } = require('child_process');
 
@@ -28,15 +28,44 @@ function createWindow() {
         // For this assignment, leading the live URL is often easiest for updates, 
         // but typically you'd load a local file: mainWindow.loadFile(path.join(__dirname, '../out/index.html'));
         // Let's try to load the local build first.
-        mainWindow.loadFile(path.join(__dirname, '../out/index.html')).catch(() => {
-            console.log('Failed to load local build, falling back to live URL? No, best to fail fast.');
+        // Let's try to load the local build first.
+        mainWindow.loadFile(path.join(__dirname, '../out/index.html')).catch((pkgError) => {
+            console.error('Failed to load local build:', pkgError);
+            dialog.showErrorBox("Load Error", "Failed to load application files.\n" + pkgError.message);
         });
     }
+
+    // Add a menu to toggle DevTools (critical for debugging production builds)
+    const { Menu } = require('electron');
+    const menu = Menu.buildFromTemplate([
+        {
+            label: 'View',
+            submenu: [
+                { role: 'reload' },
+                { role: 'forceReload' },
+                { role: 'toggleDevTools' }
+            ]
+        },
+        {
+            label: 'Window',
+            submenu: [
+                { role: 'minimize' },
+                { role: 'close' }
+            ]
+        }
+    ]);
+    Menu.setApplicationMenu(menu);
 
     // external links should open in default browser
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);
         return { action: 'deny' };
+    });
+
+    // Log render process crashes
+    mainWindow.webContents.on('render-process-gone', (event, details) => {
+        console.error('Render process gone:', details);
+        dialog.showErrorBox("Crash", "The application crashed: " + details.reason);
     });
 }
 
