@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RSSI Lab Logger
 
-## Getting Started
+A Next.js application designed for "Assignment 3.1" (MIT PE) to record, visualize, and report Wi-Fi RSSI measurements.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Data Entry**: Record Distance and RSSI (dBm).
+- **Auto-Aggregation**: Computes mean RSSI and standard deviation per distance.
+- **Visuals**: Plots RSSI vs Distance trend line.
+- **Commentary**: Generates a 150-300 word specific analysis text based on your data.
+- **Export**:
+  - **Print to PDF**: Generates a clean, assignment-ready report.
+  - **CSV Download**: Exports raw data.
+- **Persistence**: All data is saved to your browser's LocalStorage automatically.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to Measure RSSI on macOS
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You do **not** need external tools. macOS has built-in diagnostics.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Method A: The Easy Way (Menu Bar)**
+1. Press and hold the **Option (⌥)** key.
+2. Click the **Wi-Fi icon** in the top menu bar.
+3. Look for the gray text line: `RSSI: -xx dBm`.
+4. Record this number.
 
-## Learn More
+**Method B: The Terminal Way (Faster)**
+1. Open Terminal.
+2. Paste this command:
+   ```bash
+   /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I
+   ```
+3. Look for `agrCtlRSSI: -xx`.
 
-To learn more about Next.js, take a look at the following resources:
+## Running Locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. Open [http://localhost:3000](http://localhost:3000).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment (Vercel)
 
-## Deploy on Vercel
+This app is optimized for Vercel.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push this code to a GitHub repository.
+2. Go to [Vercel.com](https://vercel.com) and "Add New Project".
+3. Import your repository.
+4. Click **Deploy**. No environment variables are needed.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT License. See [LICENSE](./LICENSE) file for details.
