@@ -172,7 +172,7 @@ export default function Home() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-green-400 p-10 font-mono text-sm">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-        <h2 className="text-xl font-bold mb-4">System Initializing...</h2>
+        <h2 className="text-xl font-bold mb-4">System Initializing... (v1.0.13)</h2>
         <div className="w-full max-w-2xl bg-black border border-green-9000 rounded p-4 h-96 overflow-y-auto shadow-inner">
           {loadingStatus.map((log, i) => (
             <div key={i} className="border-b border-green-900/30 py-1">{log}</div>
