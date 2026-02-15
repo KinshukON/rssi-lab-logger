@@ -21,11 +21,15 @@
       "package.json"
     ],
     "mac": {
-      "target": "dmg",
-      "identity": null,
-      "arch": [
-        "universal"
-      ]
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "identity": null
     },
     "directories": {
       "output": "dist"
