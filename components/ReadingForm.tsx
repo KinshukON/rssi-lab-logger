@@ -20,6 +20,27 @@ export default function ReadingForm({ unit, onAddReading, suggestedDistance }: P
     const [note, setNote] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
 
+    const [isElectron, setIsElectron] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.electronAPI?.isElectron) {
+            setIsElectron(true);
+        }
+    }, []);
+
+    const handleAutoMeasure = async () => {
+        if (!window.electronAPI) return;
+        try {
+            setError(null);
+            // Show some loading state if desired, or just wait
+            const rssiVal = await window.electronAPI.getRssi();
+            setRssi(rssiVal.toString());
+        } catch (err: any) {
+            console.error(err);
+            setError("Failed to get reading from airport utility. Is Wi-Fi on?");
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -62,10 +83,21 @@ export default function ReadingForm({ unit, onAddReading, suggestedDistance }: P
 
     return (
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6 transition-all hover:shadow-md">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                <span className="bg-blue-100 text-blue-600 p-1 rounded mr-2 text-xs">STEP 2</span>
-                Add Measurement
-            </h3>
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-slate-800 flex items-center">
+                    <span className="bg-blue-100 text-blue-600 p-1 rounded mr-2 text-xs">STEP 2</span>
+                    Add Measurement
+                </h3>
+                {isElectron && (
+                    <button
+                        type="button"
+                        onClick={handleAutoMeasure}
+                        className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md font-bold hover:bg-green-200 transition-colors flex items-center"
+                    >
+                        ⚡️ Auto Measure
+                    </button>
+                )}
+            </div>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-end">
 
                 <div className="col-span-1">
