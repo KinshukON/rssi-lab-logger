@@ -31,6 +31,9 @@
       ],
       "identity": null
     },
+    "asarUnpack": [
+      "**/node_modules/**/*"
+    ],
     "directories": {
       "output": "dist"
     }
