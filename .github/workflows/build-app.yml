@@ -28,6 +28,8 @@ jobs:
 
       - name: Build Next.js
         run: npm run build
+        env:
+          NEXT_PUBLIC_IS_ELECTRON: 'true'
 
       - name: Build & Release Electron App
         uses: samuelmeuli/action-electron-builder@v1
