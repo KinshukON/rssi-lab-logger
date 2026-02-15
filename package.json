@@ -32,7 +32,9 @@
       "identity": null
     },
     "asarUnpack": [
-      "**/node_modules/**/*"
+      "**/node_modules/sharp/**/*",
+      "**/node_modules/@img/sharp-darwin-arm64/**/*",
+      "**/node_modules/@img/sharp-darwin-x64/**/*"
     ],
     "directories": {
       "output": "dist"
