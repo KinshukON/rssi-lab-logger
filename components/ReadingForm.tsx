@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Reading } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { metersToFeet, feetToMeters } from "@/lib/units";

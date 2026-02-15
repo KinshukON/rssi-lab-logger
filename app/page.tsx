@@ -141,6 +141,14 @@ export default function Home() {
                   <span>View Report</span>
                 </button>
               </Link>
+              <a
+                href="https://github.com/KinshukON/rssi-lab-logger/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden md:inline-flex bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all shadow-sm hover:shadow active:scale-95 ml-2"
+              >
+                <span> Download App</span>
+              </a>
             </div>
           </div>
         </div>
