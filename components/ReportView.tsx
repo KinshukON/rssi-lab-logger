@@ -23,7 +23,7 @@ export default function ReportView({ meta, groups }: Props) {
                 <h1 className="text-3xl font-bold text-gray-900">{meta.title}</h1>
                 <div className="flex justify-between mt-4 text-sm text-gray-600">
                     <div>
-                        <p><span className="font-semibold">Student Name:</span> {meta.name || "____________________"}</p>
+                        <p><span className="font-semibold">Operator:</span> {meta.name || "____________________"}</p>
                         <p><span className="font-semibold">Date:</span> {new Date(meta.dateISO).toLocaleDateString()} {new Date(meta.dateISO).toLocaleTimeString()}</p>
                     </div>
                     <div className="text-right">
