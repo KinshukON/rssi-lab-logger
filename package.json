@@ -12,6 +12,22 @@
     "electron-builder": "electron-builder",
     "dist": "npm run build && electron-builder"
   },
+  "build": {
+    "appId": "com.kinshukdutta.rssilablogger",
+    "productName": "RSSI Lab Logger",
+    "files": [
+      "electron/**/*",
+      "out/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": "dmg",
+      "identity": null
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
   "dependencies": {
     "@types/uuid": "^10.0.0",
     "clsx": "^2.1.1",
