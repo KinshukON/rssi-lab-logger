@@ -73,7 +73,7 @@ export default function RootLayout({
             fontSize: '12px'
           }}
         >
-          <h3>Global Event Log (v1.0.15-DEBUG)</h3>
+          <h3>Global Event Log (v1.0.16-DEBUG)</h3>
         </div>
         {children}
       </body>

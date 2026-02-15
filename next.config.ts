@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'export',
-  // Use relative paths for assets so they load in Electron (file:// protocol)
-  assetPrefix: process.env.NEXT_PUBLIC_IS_ELECTRON ? './' : undefined,
+  // Force relative paths in production builds to ensure Electron compatibility
+  assetPrefix: process.env.NODE_ENV === 'production' ? './' : undefined,
   trailingSlash: true,
   images: {
     unoptimized: true,
