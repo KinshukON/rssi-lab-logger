@@ -78,36 +78,65 @@ export default function Home() {
     document.body.removeChild(link);
   };
 
+  const handleDemoData = () => {
+    if (readings.length > 0 && !confirm("Overwrite current data with demo data?")) return;
+
+    const demoReadings: Reading[] = [
+      { id: "1", createdAtISO: new Date().toISOString(), distanceM: 1, rssiDbm: -35, note: "Baseline" },
+      { id: "2", createdAtISO: new Date().toISOString(), distanceM: 1, rssiDbm: -38 },
+      { id: "3", createdAtISO: new Date().toISOString(), distanceM: 2, rssiDbm: -45 },
+      { id: "4", createdAtISO: new Date().toISOString(), distanceM: 3, rssiDbm: -52 },
+      { id: "5", createdAtISO: new Date().toISOString(), distanceM: 4, rssiDbm: -58 },
+      { id: "6", createdAtISO: new Date().toISOString(), distanceM: 5, rssiDbm: -62, note: "Wall obstruction" },
+      { id: "7", createdAtISO: new Date().toISOString(), distanceM: 6, rssiDbm: -68 },
+      { id: "8", createdAtISO: new Date().toISOString(), distanceM: 8, rssiDbm: -72 },
+      { id: "9", createdAtISO: new Date().toISOString(), distanceM: 10, rssiDbm: -78 },
+      { id: "10", createdAtISO: new Date().toISOString(), distanceM: 12, rssiDbm: -82, note: "Packet loss started" },
+    ];
+    setReadings(demoReadings);
+    setMeta({ ...meta, location: "Demo Lab", band: "5GHz", ssid: "MIT-Secure" });
+  };
+
   if (!loaded) return <div className="p-10 text-center">Loading...</div>;
 
   const groups = groupReadings(readings);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 font-sans">
+    <div className="min-h-screen bg-slate-50 pb-20 font-sans selection:bg-blue-100">
       {/* Navbar */}
-      <nav className="bg-white border-b border-gray-200">
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 bg-opacity-90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <span className="text-xl font-bold text-blue-600">RSSI Lab Logger</span>
+            <div className="flex items-center space-x-3">
+              <div className="bg-blue-600 text-white p-1.5 rounded-lg">
+                <FileText size={20} />
+              </div>
+              <span className="text-xl font-bold text-slate-800 tracking-tight">RSSI Lab Logger</span>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={handleDemoData}
+                className="hidden sm:inline-flex text-xs font-semibold text-slate-500 hover:text-blue-600 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-md transition-colors"
+              >
+                Test with Demo Data
+              </button>
+              <div className="h-6 w-px bg-slate-200 mx-2 hidden sm:block"></div>
               <button
                 onClick={handleReset}
-                className="text-gray-500 hover:text-red-600 p-2 rounded-md transition-colors"
+                className="text-slate-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors"
                 title="Reset Experiment"
               >
-                <RotateCcw size={20} />
+                <RotateCcw size={18} />
               </button>
               <button
                 onClick={handleCsvExport}
-                className="text-gray-500 hover:text-blue-600 p-2 rounded-md transition-colors"
+                className="text-slate-400 hover:text-blue-600 p-2 rounded-full hover:bg-blue-50 transition-colors"
                 title="Export CSV"
               >
-                <Download size={20} />
+                <Download size={18} />
               </button>
               <Link href="/report">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center space-x-2 transition-colors">
+                <button className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all shadow-sm hover:shadow active:scale-95">
                   <FileText size={16} />
                   <span>View Report</span>
                 </button>
@@ -125,33 +154,33 @@ export default function Home() {
         </section>
 
         {/* Measurement Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Left Column: Input */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-6 sticky top-24">
             <ReadingForm
               unit={meta.unit}
               onAddReading={handleAddReading}
-              suggestedDistance={
-                // Propose next distance based on simple heuristic (last + 1 or +5)? 
-                // Actually maybe just leave blank or keep last.
-                // Let's leave blank for now.
-                undefined
-              }
             />
-            <div className="bg-blue-50 border border-blue-100 p-4 rounded-md text-sm text-blue-800">
-              <p className="font-semibold mb-1">How to measure on macOS:</p>
-              <ol className="list-decimal list-inside space-y-1">
-                <li>Hold <kbd className="font-mono bg-blue-100 px-1 rounded">Option (⌥)</kbd> and click Wi-Fi icon.</li>
-                <li>Look for <strong>RSSI: -xx dBm</strong>.</li>
-                <li>Or run in Terminal: <br /><code className="bg-blue-100 px-1 rounded block mt-1 text-xs">/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I</code></li>
+            <div className="bg-blue-50 border border-blue-100 p-5 rounded-xl text-sm text-blue-900 shadow-sm">
+              <p className="font-bold mb-2 flex items-center">
+                <span className="mr-2 text-lg">ℹ️</span> How to measure on macOS:
+              </p>
+              <ol className="list-decimal list-inside space-y-2 ml-1">
+                <li>Hold <kbd className="font-mono bg-blue-200 px-1.5 py-0.5 rounded text-blue-800 border border-blue-300">Option (⌥)</kbd> and click the Wi-Fi icon in your top menu bar.</li>
+                <li>Look for the line: <strong className="font-mono bg-white px-1 rounded">RSSI: -xx dBm</strong>.</li>
+                <li>Alternative (Terminal): <br /><code className="bg-slate-800 text-slate-200 px-2 py-1 rounded block mt-1.5 text-xs font-mono overflow-x-auto whitespace-pre">airport -I</code></li>
               </ol>
             </div>
           </div>
 
           {/* Right Column: Data & Vis */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Live Visualization</h3>
+              <RssiChart groups={groups} meta={meta} />
+            </div>
+
             <AggregatesTable groups={groups} meta={meta} />
-            <RssiChart groups={groups} meta={meta} />
             <ReadingsTable groups={groups} meta={meta} onDeleteReading={handleDeleteReading} />
           </div>
         </section>

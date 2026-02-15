@@ -25,109 +25,97 @@ export default function ExperimentMetaForm({ meta, onUpdate }: Props) {
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Experiment Metadata</h2>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                <span className="bg-blue-100 text-blue-600 p-1 rounded mr-2 text-xs">STEP 1</span>
+                Experiment Setup
+            </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Experiment Title</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Title</label>
                     <input
                         type="text"
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Student / Researcher Name</label>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Student Name</label>
                     <input
                         type="text"
                         name="name"
                         value={formData.name || ""}
                         onChange={handleChange}
                         placeholder="e.g. Jane Doe"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date & Time</label>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Date & Time</label>
                     <input
                         type="datetime-local"
                         name="dateISO"
-                        // truncated to minutes for input compatibility
                         value={formData.dateISO.slice(0, 16)}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Location</label>
                     <input
                         type="text"
                         name="location"
                         value={formData.location || ""}
                         onChange={handleChange}
-                        placeholder="e.g. Living Room, Building 4"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g. Living Room"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Wi-Fi Band</label>
-                    <select
-                        name="band"
-                        value={formData.band}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                        <option value="Unknown">Unknown</option>
-                        <option value="2.4GHz">2.4 GHz</option>
-                        <option value="5GHz">5 GHz</option>
-                    </select>
+                <div className="grid grid-cols-2 gap-2">
+                    <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Band</label>
+                        <select
+                            name="band"
+                            value={formData.band}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        >
+                            <option value="Unknown">Unknown</option>
+                            <option value="2.4GHz">2.4 GHz</option>
+                            <option value="5GHz">5 GHz</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Unit</label>
+                        <select
+                            name="unit"
+                            value={formData.unit}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        >
+                            <option value="m">Meters (m)</option>
+                            <option value="ft">Feet (ft)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">SSID (Optional)</label>
+                <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">AP Name / SSID (Optional)</label>
                     <input
                         type="text"
                         name="ssid"
                         value={formData.ssid || ""}
                         onChange={handleChange}
-                        placeholder="Network Name"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g. MIT-GUEST"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Measurement Unit</label>
-                    <div className="flex items-center space-x-4 mt-2">
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="unit"
-                                value="m"
-                                checked={formData.unit === "m"}
-                                onChange={handleChange}
-                                className="mr-2 text-blue-600 focus:ring-blue-500"
-                            />
-                            Meters (m)
-                        </label>
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="unit"
-                                value="ft"
-                                checked={formData.unit === "ft"}
-                                onChange={handleChange}
-                                className="mr-2 text-blue-600 focus:ring-blue-500"
-                            />
-                            Feet (ft)
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>

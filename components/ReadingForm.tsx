@@ -61,13 +61,16 @@ export default function ReadingForm({ unit, onAddReading, suggestedDistance }: P
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mt-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Add Measurement</h3>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6 transition-all hover:shadow-md">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                <span className="bg-blue-100 text-blue-600 p-1 rounded mr-2 text-xs">STEP 2</span>
+                Add Measurement
+            </h3>
+            <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-end">
 
                 <div className="col-span-1">
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">
-                        Distance ({unit})
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Dis ({unit})
                     </label>
                     <input
                         type="number"
@@ -75,13 +78,13 @@ export default function ReadingForm({ unit, onAddReading, suggestedDistance }: P
                         value={distance}
                         onChange={(e) => setDistance(e.target.value)}
                         placeholder="0.0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                         required
                     />
                 </div>
 
                 <div className="col-span-1">
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
                         RSSI (dBm)
                     </label>
                     <input
@@ -89,50 +92,50 @@ export default function ReadingForm({ unit, onAddReading, suggestedDistance }: P
                         value={rssi}
                         onChange={(e) => setRssi(e.target.value)}
                         placeholder="-50"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                         required
                     />
                 </div>
 
                 <div className="col-span-1">
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">
-                        Noise (Opt.)
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Noise
                     </label>
                     <input
                         type="number"
                         value={noise}
                         onChange={(e) => setNoise(e.target.value)}
                         placeholder="-90"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                     />
                 </div>
 
                 <div className="col-span-1">
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">
-                        Tx Rate (Opt.)
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Rate
                     </label>
                     <input
                         type="number"
                         value={txRate}
                         onChange={(e) => setTxRate(e.target.value)}
                         placeholder="Mbps"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                     />
                 </div>
 
-                <div className="col-span-1 md:col-span-2 lg:col-span-1">
+                <div className="col-span-2 md:col-span-4 lg:col-span-1 mt-2 lg:mt-0">
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center"
+                        className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center shadow-sm"
                     >
-                        Add Reading
+                        Add
                     </button>
                 </div>
             </form>
 
             {error && (
-                <div className="mt-3 text-sm text-red-600 font-medium">
-                    Error: {error}
+                <div className="mt-3 p-2 bg-red-50 text-xs text-red-600 font-medium rounded border border-red-100 animate-pulse">
+                    ⚠️ {error}
                 </div>
             )}
         </div>
