@@ -8,17 +8,18 @@
     "build": "next build",
     "build:electron": "NEXT_PUBLIC_IS_ELECTRON=true next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run lint && npm run typecheck && npm run build",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-builder": "electron-builder",
-    "dist": "npm run build:electron && electron-builder"
+    "dist": "electron-builder"
   },
   "build": {
     "appId": "com.kinshukdutta.rssilablogger",
     "productName": "RSSI Lab Logger",
     "files": [
       "electron/**/*",
-      "out/**/*",
       "package.json"
     ],
     "mac": {
@@ -43,8 +44,11 @@
     }
   },
   "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.95.3",
     "@types/uuid": "^10.0.0",
     "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
     "lucide-react": "^0.564.0",
     "next": "16.1.6",
     "react": "19.2.3",

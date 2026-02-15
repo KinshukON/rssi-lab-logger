@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  // Workaround: Force relative paths for Electron (production build), but keep absolute for Vercel
-  assetPrefix: (process.env.NODE_ENV === 'production' && !process.env.VERCEL) ? './' : undefined,
+  // Removed output: 'export' to enable API routes for auth + cloud sync.
+  // Web: deployed to Vercel. Electron: loads from deployed URL for cloud sync.
   trailingSlash: true,
   images: {
     unoptimized: true,

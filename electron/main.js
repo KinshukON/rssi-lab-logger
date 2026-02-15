@@ -1,8 +1,6 @@
 const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
-const { exec } = require('child_process');
-
-
+const { spawn } = require('child_process');
 
 let mainWindow;
 
@@ -17,25 +15,20 @@ function createWindow() {
         },
     });
 
-    // Check if we are in dev mode (running via localhost)
     const isDev = process.env.NODE_ENV === 'development';
+    const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://rssi-lab-logger.vercel.app';
 
     if (isDev) {
         mainWindow.loadURL('http://localhost:3000');
         mainWindow.webContents.openDevTools();
     } else {
-        // In production, we can either serve the static export or load the live URL.
-        // For this assignment, leading the live URL is often easiest for updates, 
-        // but typically you'd load a local file: mainWindow.loadFile(path.join(__dirname, '../out/index.html'));
-        // Let's try to load the local build first.
-        // Let's try to load the local build first.
-        mainWindow.loadFile(path.join(__dirname, '../out/index.html')).catch((pkgError) => {
-            console.error('Failed to load local build:', pkgError);
-            dialog.showErrorBox("Load Error", "Failed to load application files.\n" + pkgError.message);
+        // Load from deployed URL for cloud sync (auth, API)
+        mainWindow.loadURL(appUrl).catch((err) => {
+            console.error('Failed to load app URL:', err);
+            dialog.showErrorBox('Load Error', 'Failed to load application.\n' + err.message);
         });
     }
 
-    // Add a menu to toggle DevTools (critical for debugging production builds)
     const { Menu } = require('electron');
     const menu = Menu.buildFromTemplate([
         {
@@ -56,43 +49,55 @@ function createWindow() {
     ]);
     Menu.setApplicationMenu(menu);
 
-    // external links should open in default browser
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);
         return { action: 'deny' };
     });
 
-    // Log render process crashes
     mainWindow.webContents.on('render-process-gone', (event, details) => {
         console.error('Render process gone:', details);
-        dialog.showErrorBox("Crash", "The application crashed: " + details.reason);
+        dialog.showErrorBox('Crash', 'The application crashed: ' + details.reason);
     });
 }
 
-// IPC Handler for RSSI
+// IPC Handler for RSSI — uses spawn (no shell) for security
+const AIRPORT_PATH = '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport';
+
 ipcMain.handle('get-rssi', async () => {
     return new Promise((resolve, reject) => {
-        // macOS command to get Wi-Fi details
-        const cmd = '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I';
+        const child = spawn(AIRPORT_PATH, ['-I'], {
+            shell: false,
+        });
 
-        exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                reject(error.message);
+        let stdout = '';
+        let stderr = '';
+
+        child.stdout?.on('data', (data) => { stdout += data; });
+        child.stderr?.on('data', (data) => { stderr += data; });
+
+        child.on('error', (err) => {
+            reject(err.message);
+        });
+
+        child.on('close', (code) => {
+            if (code !== 0) {
+                reject(stderr || `airport exited with code ${code}`);
                 return;
             }
-            // Parse stdout for "agrCtlRSSI: -xx"
             const match = stdout.match(/agrCtlRSSI:\s*(-?\d+)/);
             if (match && match[1]) {
                 const rssi = parseInt(match[1], 10);
-                resolve(rssi);
+                if (rssi >= -100 && rssi <= 0) {
+                    resolve(rssi);
+                } else {
+                    reject('RSSI out of valid range (-100 to 0)');
+                }
             } else {
-                reject("Could not find RSSI in airport output");
+                reject('Could not find RSSI in airport output');
             }
         });
     });
 });
-
 
 app.whenReady().then(() => {
     createWindow();

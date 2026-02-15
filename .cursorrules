@@ -1,0 +1,50 @@
+# RSSI Lab Logger — Cursor Rules
+
+## Planning + change control
+
+- Always begin by summarizing intended changes in bullet points.
+- Always list files to be created or modified before editing.
+- Prefer the smallest possible change set.
+- Never invent files: if needed, create them explicitly.
+
+## Verification + build discipline
+
+Before finalizing any implementation, ensure:
+
+- `npm run lint` exists and is runnable
+- `npm run typecheck` exists (runs `tsc --noEmit`)
+- `npm run build` exists
+- `npm run ci` exists and runs lint + typecheck + build
+
+If a check is missing, add it to `package.json`.
+
+## Git discipline
+
+After implementing changes, always output:
+
+- Suggested branch name
+- Suggested commit message(s)
+- Exact git commands:
+  - `git status`
+  - `git add -A`
+  - `git commit -m "..."`
+
+## Vercel workflow rules
+
+- Validate functionality primarily via:
+  - Vercel preview deployments on PR/branch push
+  - Vercel production deploy on merge to main
+- Still run minimal local verification (`npm run ci`) when possible.
+
+## Electron release rules
+
+- Release DMG builds happen only on git tags matching `v*`.
+- Workflow: tag → push tag → GitHub Actions → GitHub Releases.
+- Do not assume signed builds; the CI uses unscoped builds unless Mac certs are configured.
+
+## Secrets rules
+
+- Never output full secret values.
+- If the user pastes a secret, instruct them to rotate it immediately.
+- Only `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are acceptable on the client.
+- Never add `.env`, `.env.local`, or `.env.*.local` to git. They must remain in `.gitignore`.
